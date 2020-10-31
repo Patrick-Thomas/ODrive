@@ -107,6 +107,10 @@ bool Controller::update(float pos_estimate, float vel_estimate, float* current_s
     anticogging_calibration(pos_estimate, vel_estimate);
     float anticogging_pos = pos_estimate;
 
+	// ESTOP function
+	GPIO_PinState nESTOP_state = HAL_GPIO_ReadPin(GPIO_8_GPIO_Port, GPIO_8_Pin);
+	if (nESTOP_state == GPIO_PIN_RESET) vel_setpoint_ = 0.0f;
+
     // Trajectory control
     if (config_.control_mode == CTRL_MODE_TRAJECTORY_CONTROL) {
         // Note: uint32_t loop count delta is OK across overflow
